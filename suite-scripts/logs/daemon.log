@@ -1,0 +1,6 @@
+[2026-11-02 22:57:57] daemon start pid 221119
+[2026-11-03 01:36:12] stop file seen
+[01:52:33] cleanup start
+partner unreachable now: task SuiteRun / C:\dev\suite must be removed later
+[01:52:58] cleanup end
+[2026-11-03 01:52:58] daemon end

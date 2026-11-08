@@ -1,0 +1,35 @@
+name: suite
+# Throwaway workflow added by SUITE-RUNNER on a ci/** branch only. Never on main. The branch is deleted after the run.
+on:
+  push:
+    branches: ['ci/**']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - name: install
+        run: bun install
+      - name: full suite
+        run: |
+          dirs="packages apps"
+          [ -d tools/control-worker ] && dirs="$dirs tools/control-worker"
+          t0=$(date +%s)
+          set +e
+          bun test --isolate --timeout 120000 $dirs > test.log 2>&1
+          rc=$?
+          echo "SUITE_EXIT=$rc SECS=$(( $(date +%s) - t0 ))" >> test.log
+          echo "bun $(bun --version) tz $(date +%Z) nproc $(nproc)" >> test.log
+          exit 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: suite-log
+          path: test.log
+          retention-days: 3

@@ -1,0 +1,32 @@
+name: suite-files
+# Throwaway triage workflow added by SUITE-RUNNER on a ci/** branch only. Never on main. The branch is deleted after the run.
+on:
+  push:
+    branches: ['ci/**']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install
+      - name: files repeated
+        run: |
+          set +e
+          for i in 1 2 3 4 5; do
+            bun test --isolate --timeout 120000 __FILES__ > run$i.log 2>&1
+            echo "RUN $i exit=$?" >> test.log
+            grep -E '^\(fail\)| pass$| fail$' run$i.log >> test.log
+          done
+          exit 0
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: suite-log
+          path: test.log
+          retention-days: 3

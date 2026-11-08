@@ -1,0 +1,14 @@
+{
+ "tambola": [
+  {
+   "name": "D. participants > UC-32 a crowd arriving at the same instant",
+   "evidence": "triage 23:35 IST on GitHub Actions, apps/edge/test/usecases.test.ts alone, 5 runs each: head 745bd35 failed 3 of 5, live 48009d5 failed 2 of 5 (results/cloud-files/tambola-745bd35 and -48009d5). Flaky on the live release tip too, so not a regression."
+  }
+ ],
+ "luckydraw": [
+  {
+   "name": "D. participants > UC-32 a crowd arriving at the same instant",
+   "evidence": "Lucky Draw 2a6472e on GitHub Actions: UC-32 failed in the 1st full run (results/cloud/_run1-luckydraw-2a6472e), passed in the 2nd full run of the same commit; the file alone passed 5 of 5 on head and on live 27bed51 (results/cloud-files/luckydraw-*). Same usecases test is flaky on Tambola head AND live (3/5 and 2/5). Load-dependent, not a regression."
+  }
+ ]
+}

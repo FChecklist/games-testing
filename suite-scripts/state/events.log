@@ -1,0 +1,119 @@
+2026-11-02 22:46:21 claimed bingo-cce95d0
+2026-11-02 22:46:21 claimed luckydraw-4cdadec
+2026-11-02 22:46:21 claimed tambola-a887909
+2026-11-02 22:46:21 claimed tictactoe-1ea8202
+2026-11-02 22:46:21 claimed luck-27ad37b
+2026-11-02 22:57:59 started cloud tictactoe 1ea8202
+2026-11-02 22:58:00 started partner luckydraw 4cdadec
+2026-11-02 22:58:18 partner lane unreachable, retry in 5 min
+2026-11-02 23:01:49 started cloud luck 27ad37b
+2026-11-02 23:03:21 started partner luckydraw 4cdadec
+2026-11-02 23:03:36 started apicloud tambola a887909
+2026-11-02 23:03:41 partner lane unreachable, retry in 5 min
+2026-11-02 23:04:46 luck 27ad37b on cloud: GREEN (clean)
+2026-11-02 23:05:00 started cloud tambola 48009d5
+2026-11-02 23:08:33 claimed snakes-6490c88
+2026-11-02 23:13:47 started phone luckydraw 4cdadec
+2026-11-02 23:13:47 started partner snakes 6490c88
+2026-11-02 23:14:05 partner lane unreachable, retry in 5 min
+2026-11-02 23:17:20 tambola a887909 on cloud: RED (3 new failure(s), 0 also fail on live)
+2026-11-02 23:17:26 claimed tambola-745bd35
+2026-11-02 23:17:26 claimed tictactoe-b3ea3b1
+2026-11-02 23:17:26 claimed snakes-41d0c50
+2026-11-02 23:17:31 started cloud tambola 745bd35
+2026-11-02 23:17:44 infra failure on apicloud for tambola a887909 (rc=1, attempt 1)
+2026-11-02 23:18:13 started apicloud tictactoe b3ea3b1
+2026-11-02 23:22:15 tictactoe b3ea3b1 on apicloud: GREEN (clean)
+2026-11-02 23:23:18 started partner snakes 6490c88
+2026-11-02 23:23:36 partner lane unreachable, retry in 5 min
+2026-11-02 23:29:27 claimed bingo-f5d67d7
+2026-11-02 23:29:27 claimed luckydraw-ff46a0c
+2026-11-02 23:29:53 started apicloud bingo f5d67d7
+2026-11-02 23:29:53 started partner snakes 41d0c50
+2026-11-02 23:30:11 partner lane unreachable, retry in 5 min
+2026-11-02 23:30:38 tambola 745bd35 on cloud: RED (1 new failure(s), 0 also fail on live)
+2026-11-02 23:30:57 started cloud snakes 41d0c50
+2026-11-02 23:33:07 started phone luckydraw ff46a0c
+2026-11-02 23:33:35 snakes 41d0c50 on cloud: GREEN (clean)
+2026-11-02 23:33:48 started cloud tictactoe 7e17251
+2026-11-02 23:37:25 tictactoe 1ea8202 on cloud: RED (2 new failure(s), 0 also fail on live)
+2026-11-02 23:37:32 started cloud bingo dfe2ee4
+2026-11-02 23:37:33 started partner tambola 745bd35
+2026-11-02 23:37:50 partner lane unreachable, retry in 5 min
+2026-11-02 23:44:02 tambola 745bd35 on cloud: GREEN (only known-flaky failures (1 known-flaky ignored, see flaky.json))
+2026-11-02 23:44:18 started cloud luck 26bdbe6
+2026-11-02 23:44:18 started partner luckydraw 27bed51
+2026-11-02 23:44:36 partner lane unreachable, retry in 5 min
+2026-11-02 23:47:37 started cloud bingo f5d67d7
+2026-11-02 23:50:42 claimed bingo-03842b8
+2026-11-02 23:50:45 started apicloud bingo 03842b8
+2026-11-02 23:50:45 started partner luckydraw 27bed51
+2026-11-02 23:51:03 partner lane unreachable, retry in 5 min
+2026-11-02 23:54:04 started phone luckydraw 27bed51
+2026-11-02 23:56:02 claimed tambola-5d01d34
+2026-11-02 23:56:02 claimed bingo-5344976
+2026-11-02 23:56:02 claimed luckydraw-2a6472e
+2026-11-02 23:56:02 claimed tictactoe-a4510d4
+2026-11-02 23:56:02 claimed luck-12955e7
+2026-11-02 23:56:02 claimed snakes-f8bb326
+2026-11-02 23:56:05 started partner tambola 5d01d34
+2026-11-02 23:56:23 partner lane unreachable, retry in 5 min
+2026-11-02 23:59:19 infra failure on cloud for bingo f5d67d7 (rc=2, attempt 1)
+2026-11-02 23:59:30 started cloud tambola 5d01d34
+2026-11-03 00:05:54 bingo 03842b8 on apicloud: GREEN (clean)
+2026-11-03 00:06:03 started apicloud bingo 5344976
+2026-11-03 00:06:03 started partner luckydraw ff46a0c
+2026-11-03 00:06:21 partner lane unreachable, retry in 5 min
+2026-11-03 00:10:53 luckydraw 4cdadec on phone: RED (1 new failure(s), 12 also fail on live)
+2026-11-03 00:10:54 luckydraw ff46a0c on phone: GREEN (same 13 failure(s) as live)
+2026-11-03 00:11:08 started phone luckydraw 2a6472e
+2026-11-03 00:11:43 started partner tictactoe a4510d4
+2026-11-03 00:12:00 partner lane unreachable, retry in 5 min
+2026-11-03 00:13:22 tambola 5d01d34 on cloud: GREEN (clean)
+2026-11-03 00:13:34 started cloud tictactoe a4510d4
+2026-11-03 00:14:08 infra failure on apicloud for bingo 5344976 (rc=1, attempt 1)
+2026-11-03 00:14:20 started apicloud bingo 5344976
+2026-11-03 00:16:27 tictactoe a4510d4 on cloud: GREEN (clean)
+2026-11-03 00:16:37 started cloud luck 12955e7
+2026-11-03 00:17:02 started partner snakes f8bb326
+2026-11-03 00:17:21 partner lane unreachable, retry in 5 min
+2026-11-03 00:19:27 luck 12955e7 on cloud: GREEN (clean)
+2026-11-03 00:19:43 started cloud snakes f8bb326
+2026-11-03 00:22:24 started partner luckydraw 27bed51
+2026-11-03 00:22:30 snakes f8bb326 on cloud: GREEN (clean)
+2026-11-03 00:22:40 started cloud snakes 93531a2
+2026-11-03 00:22:43 partner lane unreachable, retry in 5 min
+2026-11-03 00:25:47 started cloud luckydraw 2a6472e
+2026-11-03 00:27:28 luckydraw 2a6472e on phone: GREEN (same 13 failure(s) as live)
+2026-11-03 00:27:37 started phone bingo dfe2ee4
+2026-11-03 00:29:04 started partner luckydraw 27bed51
+2026-11-03 00:29:04 started cloud luckydraw 27bed51
+2026-11-03 00:29:20 partner lane unreachable, retry in 5 min
+2026-11-03 00:29:54 bingo 5344976 on apicloud: GREEN (clean)
+2026-11-03 00:32:14 luckydraw 2a6472e on cloud: RED (1 new failure(s), 1 also fail on live)
+2026-11-03 00:37:55 started partner luckydraw 27bed51
+2026-11-03 00:38:12 partner lane unreachable, retry in 5 min
+2026-11-03 00:40:04 started cloud luckydraw 2a6472e
+2026-11-03 00:43:21 luckydraw 2a6472e on cloud: GREEN (same 1 failure(s) as live)
+2026-11-03 00:43:34 started partner luckydraw 27bed51
+2026-11-03 00:43:52 partner lane unreachable, retry in 5 min
+2026-11-03 00:43:55 started cloud luckydraw ff46a0c
+2026-11-03 00:46:05 luckydraw ff46a0c on cloud: GREEN (same 1 failure(s) as live)
+2026-11-03 00:50:30 bingo cce95d0 on phone: RED (3 new failure(s), 0 also fail on live)
+2026-11-03 00:50:44 started phone tambola 48009d5
+2026-11-03 00:50:44 started partner luckydraw 27bed51
+2026-11-03 00:51:02 partner lane unreachable, retry in 5 min
+2026-11-03 00:59:04 started partner luckydraw 27bed51
+2026-11-03 00:59:20 partner lane unreachable, retry in 5 min
+2026-11-03 01:09:29 started partner luckydraw 27bed51
+2026-11-03 01:09:45 partner lane unreachable, retry in 5 min
+2026-11-03 01:19:55 started partner luckydraw 27bed51
+2026-11-03 01:20:12 partner lane unreachable, retry in 5 min
+2026-11-03 01:29:17 started partner luckydraw 27bed51
+2026-11-03 01:29:34 partner lane unreachable, retry in 5 min
+2026-11-03 01:35:40 started phone tictactoe 7e17251
+2026-11-03 01:35:40 started partner luckydraw 27bed51
+2026-11-03 01:35:57 partner lane unreachable, retry in 5 min
+2026-11-03 01:52:32 started phone luck 26bdbe6
+2026-11-03 01:52:32 started partner luckydraw 27bed51
+2026-11-03 01:52:49 partner lane unreachable, retry in 5 min
