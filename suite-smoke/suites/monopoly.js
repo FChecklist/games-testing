@@ -185,7 +185,7 @@ function fakeMoneypenny(srv, clock) { // a fake Moneypenny HTTP server: verifies
     const u = new URL(url), h = init.headers, body = init.body ?? '';
     const reply = (status, j, extra = {}) => ({ ok: status < 300, status, headers: { get: (k) => extra[k] ?? null }, json: async () => j });
     srv.calls.push({ m: 'http:' + init.method + ' ' + u.pathname });
-    const expect = await hmacHex(MNP_SECRET, [h['x-mnp-timestamp'], h['x-mnp-nonce'], init.method, u.pathname + u.search, await UT.sha256Hex(body)].join('\n'));
+    const expect = await hmacHex(MNP_SECRET, [h['x-mnp-timestamp'], h['x-mnp-nonce'], init.method, u.pathname + u.search, await UT.sha256Hex(body), h['idempotency-key'] ?? ''].join('\n'));
     if (h['x-mnp-key'] !== 'mk_h' || h['x-mnp-signature'] !== expect) return reply(401, { ok: false, error: { code: 'bad_signature' } });
     if (Math.abs(clock.t - Number(h['x-mnp-timestamp'])) > 5 * MIN) return reply(401, { ok: false, error: { code: 'stale_timestamp' } });
     if (seen.has(h['x-mnp-nonce'])) return reply(401, { ok: false, error: { code: 'replayed' } });
