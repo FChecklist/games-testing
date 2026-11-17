@@ -61,4 +61,4 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { path: shards }
       - run: |
-          node -e 'const fs=require("fs"),p=require("path");let c=0,f=0,k=0,n=0;for(const d of fs.readdirSync("shards"))for(const x of fs.readdirSync("shards/"+d))if(x.endsWith(".summary.json")){const j=JSON.parse(fs.readFileSync(p.join("shards",d,x)));c+=j.cases;f+=j.failed;k+=j.checks;n++}console.log(JSON.stringify({shards_reported:n,cases:c,failed:f,checks:k}));if(f||!n)process.exit(1)'
+          node -e 'const fs=require("fs"),p=require("path");let c=0,f=0,k=0,n=0;const walk=(d)=>{for(const e of fs.readdirSync(d,{withFileTypes:true})){const q=p.join(d,e.name);if(e.isDirectory())walk(q);else if(e.name.endsWith(".summary.json")){const j=JSON.parse(fs.readFileSync(q));c+=j.cases;f+=j.failed;k+=j.checks;n++}else if(e.name==="out-versions.txt")console.log(fs.readFileSync(q,"utf8").trim())}};walk("shards");console.log(JSON.stringify({shards_reported:n,cases:c,failed:f,checks:k}));if(f||!n)process.exit(1)'
