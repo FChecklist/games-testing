@@ -39,8 +39,11 @@ jobs:
         working-directory: harness/suite-smoke
         env:
           SUITE_ROOT: ${{ github.workspace }}/repos
-          RANGE: ${{ matrix.shard * inputs.per_shard }}-${{ (matrix.shard + 1) * inputs.per_shard }}
-        run: node run-suite.mjs "${{ inputs.suite }}" "${{ inputs.seed }}" 0 "$GITHUB_WORKSPACE/out"
+          SHARD: ${{ matrix.shard }}
+          PER: ${{ inputs.per_shard }}
+        run: |
+          export RANGE="$((SHARD * PER))-$(((SHARD + 1) * PER))"
+          node run-suite.mjs "${{ inputs.suite }}" "${{ inputs.seed }}" 0 "$GITHUB_WORKSPACE/out"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
