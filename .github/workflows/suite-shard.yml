@@ -1,0 +1,61 @@
+# Smoke-suite shards on free GitHub Actions. Offline, in-process, no secrets, no network calls to any product.
+# Code under test is checked out from PUBLIC repos only (moneypenny, monopoly). Each job = one seed range; results = JSON artifacts.
+name: suite-smoke-shard
+on:
+  workflow_dispatch:
+    inputs:
+      suite: { description: 'mp | mathbulk | monopoly', default: 'mp' }
+      seed: { default: 'G1' }
+      shards: { description: 'parallel jobs (max 20)', default: '10' }
+      per_shard: { description: 'cases per job', default: '20000' }
+permissions: { contents: read }
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs: { shards: '${{ steps.m.outputs.shards }}' }
+    steps:
+      - id: m
+        run: node -e 'const n=Math.min(20,Math.max(1,+"${{ inputs.shards }}"));console.log("shards="+JSON.stringify([...Array(n).keys()]))' >> "$GITHUB_OUTPUT"
+  shard:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy: { fail-fast: false, max-parallel: 10, matrix: { shard: '${{ fromJSON(needs.plan.outputs.shards) }}' } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: harness }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/moneypenny, path: repos/moneypenny }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/monopoly, path: repos/monopoly }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: record versions
+        run: |
+          echo "moneypenny $(git -C repos/moneypenny rev-parse --short HEAD)" | tee out-versions.txt
+          echo "monopoly $(git -C repos/monopoly rev-parse --short HEAD)" | tee -a out-versions.txt
+      - name: run shard
+        working-directory: harness/suite-smoke
+        env:
+          SUITE_ROOT: ${{ github.workspace }}/repos
+          RANGE: ${{ matrix.shard * inputs.per_shard }}-${{ (matrix.shard + 1) * inputs.per_shard }}
+        run: node run-suite.mjs "${{ inputs.suite }}" "${{ inputs.seed }}" 0 "$GITHUB_WORKSPACE/out"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shard-${{ matrix.shard }}
+          path: |
+            out/*.summary.json
+            out-versions.txt
+          retention-days: 14
+  aggregate:
+    needs: shard
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: shards }
+      - run: |
+          node -e 'const fs=require("fs"),p=require("path");let c=0,f=0,k=0,n=0;for(const d of fs.readdirSync("shards"))for(const x of fs.readdirSync("shards/"+d))if(x.endsWith(".summary.json")){const j=JSON.parse(fs.readFileSync(p.join("shards",d,x)));c+=j.cases;f+=j.failed;k+=j.checks;n++}console.log(JSON.stringify({shards_reported:n,cases:c,failed:f,checks:k}));if(f||!n)process.exit(1)'
