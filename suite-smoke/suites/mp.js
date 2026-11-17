@@ -396,7 +396,7 @@ export async function runCase(w, idx, seed) {
     }
     if (fault === 'rail_down') {
       const email = `rd${idem2}@corp.example`;
-      let down = true;
+      let down = true; const rail0 = s.app.rail;
       s.app.rail = { name: 'flaky', async createOrder(o) { if (down) throw new Error('rail unavailable'); return { rail_order_id: 'R-' + o.order_id, pay_url: 'https://pay.invalid/' + o.order_id }; }, async health() { return { ok: !down }; } };
       const o = await POST(api, '/v1/buy_credits', { email, credits: 1000, currency: cur, order_ref: `rd_${tag}` });
       c.ok(o.status === 200 && o.body.status === 'pending_rail', 'order_waits_when_rail_down', o.body);
@@ -409,7 +409,7 @@ export async function runCase(w, idx, seed) {
       const again = await POST(api, '/v1/buy_credits', { email, credits: 1000, currency: cur, order_ref: `rd_${tag}` });
       c.eq(again.body.order_id, o.body.order_id, 'same_order_after_recovery');
       c.ok(again.body.status !== 'paid', 'rail_recovery_never_credits_without_payment', again.body);
-      s.app.rail = undefined;
+      s.app.rail = rail0;
       await invariants('rail_down_no_credit_without_payment');
     }
     if (fault === 'ai_ask') {
