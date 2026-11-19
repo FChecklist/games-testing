@@ -34,11 +34,11 @@ const PA = await R('apps/edge/src/price-adjust.ts');
 await R('apps/edge/src/pay.ts'); // import check only: pay.ts loads under node (its routes need D1 + Razorpay and are not driven here)
 
 // ================================================================ independent oracle (from the documents)
-const NAME = { early5: 'Early Five', early7: 'Early Seven', early10: 'Early Ten', top: 'Top Line', mid: 'Middle Line', bot: 'Bottom Line', twolines: 'Two Lines',
+export const NAME = { early5: 'Early Five', early7: 'Early Seven', early10: 'Early Ten', top: 'Top Line', mid: 'Middle Line', bot: 'Bottom Line', twolines: 'Two Lines',
   corners: 'Four Corners', star: 'Star', plus: 'Plus', frame: 'Frame', topbottom: 'Top and Bottom', midcorners: 'Middle and Corners', odd5: 'Odd Five',
   even5: 'Even Five', low5: 'Low Five', high5: 'High Five', full: 'Full House', full2: 'Super Bumper House' };
 const ENGINE_PATTERNS = ['early5', 'top', 'mid', 'bot', 'corners', 'star', 'full'];
-const HOUSES = ['early5', 'early7', 'early10', 'top', 'mid', 'bot', 'twolines', 'corners', 'star', 'plus', 'frame', 'topbottom', 'midcorners', 'odd5', 'even5', 'low5', 'high5', 'full', 'full2'];
+export const HOUSES = ['early5', 'early7', 'early10', 'top', 'mid', 'bot', 'twolines', 'corners', 'star', 'plus', 'frame', 'topbottom', 'midcorners', 'odd5', 'even5', 'low5', 'high5', 'full', 'full2'];
 const GOLDEN = [[100, 2399, 34], [250, 3499, 51], [500, 4699, 67], [750, 5899, 84], [1000, 7099, 101], [2500, 11799, 169], [5000, 17699, 253], [10000, 29499, 421]];
 const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const DAY = 86_400_000, IST = 19_800_000;
@@ -46,7 +46,7 @@ const DAY = 86_400_000, IST = 19_800_000;
 /** NOTES 4: column c holds 1-9 / 10-19 / ... / 80-90. */
 const colRange = (c) => [c === 0 ? 1 : c * 10, c === 8 ? 90 : c * 10 + 9];
 /** NOTES 4 + IMPLEMENTATION 3.1: 3 x 9, 5 per row, every column >= 1 number, column ranges, ascending in a column, 15 distinct numbers. */
-function ticketProblems(t) {
+export function ticketProblems(t) {
   const p = [];
   if (!Array.isArray(t) || t.length !== 3) return ['not 3 rows'];
   for (let r = 0; r < 3; r++) {
@@ -70,10 +70,10 @@ function ticketProblems(t) {
   if (seen.size !== 15) p.push(`${seen.size} distinct numbers`);
   return p;
 }
-const rowN = (t, r) => t[r].filter((v) => v !== null);
-const allN = (t) => [0, 1, 2].flatMap((r) => rowN(t, r));
+export const rowN = (t, r) => t[r].filter((v) => v !== null);
+export const allN = (t) => [0, 1, 2].flatMap((r) => rowN(t, r));
 /** The house rules, from the "how to win" texts: kind set (every number of a shape), any (k of a pool), lines (two of the three lines). */
-function houseRule(t, key) {
+export function houseRule(t, key) {
   const a = rowN(t, 0), b = rowN(t, 1), c = rowN(t, 2), all = allN(t);
   const corners = [a[0], a[a.length - 1], c[0], c[c.length - 1]];
   const set = (s) => ({ kind: 'set', pool: s }), any = (pool, k) => ({ kind: 'any', pool, k });
@@ -100,14 +100,14 @@ function houseRule(t, key) {
   }
 }
 /** Call index (0-based) at which a rule completes on a log, computed from positions (a different route from a running counter). */
-function ruleDoneAt(rule, pos) {
+export function ruleDoneAt(rule, pos) {
   const setDone = (s) => (s.every((n) => pos.has(n)) ? Math.max(...s.map((n) => pos.get(n))) : -1);
   if (rule.kind === 'set') return setDone(rule.pool);
   if (rule.kind === 'any') { if (rule.pool.length < rule.k) return -1; const ix = rule.pool.filter((n) => pos.has(n)).map((n) => pos.get(n)).sort((x, y) => x - y); return ix.length >= rule.k ? ix[rule.k - 1] : -1; }
   const d = rule.lines.map(setDone).filter((i) => i >= 0).sort((x, y) => x - y);
   return d.length >= 2 ? d[1] : -1;
 }
-const posOf = (log) => new Map(log.map((n, i) => [n, i]));
+export const posOf = (log) => new Map(log.map((n, i) => [n, i]));
 /** Earliest completion of a house over a participant's tickets (full2 = all 30 numbers of two tickets together). */
 function houseDoneAt(tickets, key, pos) {
   if (key === 'full2') { if (tickets.length < 2) return -1; const s = tickets.slice(0, 2).flatMap(allN); return s.every((n) => pos.has(n)) ? Math.max(...s.map((n) => pos.get(n))) : -1; }
@@ -116,7 +116,7 @@ function houseDoneAt(tickets, key, pos) {
   return best;
 }
 /** "Still to win": numbers this participant still needs (99 = cannot happen on this ticket). */
-function stillNeeds(tickets, key, called) {
+export function stillNeeds(tickets, key, called) {
   if (key === 'full2') return tickets.length < 2 ? 30 : tickets.slice(0, 2).flatMap(allN).filter((n) => !called.has(n)).length;
   let best = Infinity;
   for (const t of tickets) {
@@ -132,7 +132,7 @@ function stillNeeds(tickets, key, called) {
  * The engine's claim rule (NOTES 4 "Validity"): the pattern must be complete with numbers that were called AND cut, and complete exactly at the
  * latest call (claim before the next number). Early Five: the 5th cut called number must be the latest. Two-ticket house: all 30 numbers.
  */
-function claimVerdict(ts, pattern, cut, log, pos = posOf(log)) {
+export function claimVerdict(ts, pattern, cut, log, pos = posOf(log)) {
   const last = log.length - 1;
   const own = new Set(ts.flatMap(allN));
   const cs = new Set(cut.filter((n) => own.has(n) && pos.has(n)));
@@ -177,9 +177,9 @@ export const CELLS = [
 export async function newWorld() { return { cases: 0 }; }
 
 // ================================================================ shared helpers
-const shuffle = (r, a) => { for (let i = a.length - 1; i > 0; i--) { const j = r.int(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const randOf = (r) => (n) => Math.floor(r.next() * n);
-const sameSet = (a, b) => a.length === b.length && [...a].sort().join() === [...b].sort().join();
+export const shuffle = (r, a) => { for (let i = a.length - 1; i > 0; i--) { const j = r.int(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+export const randOf = (r) => (n) => Math.floor(r.next() * n);
+export const sameSet = (a, b) => a.length === b.length && [...a].sort().join() === [...b].sort().join();
 
 // ================================================================ engine world + claim model
 /** One engagement on the real engine with an injected clock and seeded randomness. The model mirrors the documented rules. */
@@ -668,11 +668,19 @@ function ticketCase(c, r, parts, tag) {
 // ---------------------------------------------------------------- beacon settlement cells (phone-side, v2)
 function beaconCase(c, r, parts, tag) {
   const [, key, ties, fault, nS] = parts, n = +nS;
-  const eid = `E${tag}`, ntk = key === 'full2' ? 2 : r.pick([1, 2]);
+  const ntk = key === 'full2' ? 2 : r.pick([1, 2]);
   const pids = Array.from({ length: n }, (_, i) => `s${tag}x${i}`);
-  const tickets = new Map(pids.map((p) => [p, GM.ticketsFor(eid, p, ntk)]));
+  // A fault needs a ticket that can complete the house at all. "any 5 of a kind" houses (low5 / high5 / odd5 / even5) are impossible on a
+  // ticket with fewer than 5 such numbers, and with 3 seats every ticket may be like that (T2 run: 37 cases, all low5/high5 with 3 players).
+  // So: pick the engagement id (deterministically: E<tag>, E<tag>r1, ...) until some seat's tickets can complete the house; then pick a call
+  // order in which someone completes it before the last call. Tickets stay the product's own tickets for that id.
+  let eid, tickets;
+  for (let a = 0; a < 40; a++) {
+    eid = a ? `E${tag}r${a}` : `E${tag}`;
+    tickets = new Map(pids.map((p) => [p, GM.ticketsFor(eid, p, ntk)]));
+    if (pids.some((p) => houseDoneAt(tickets.get(p), key, posOf(Array.from({ length: 90 }, (_, i) => i + 1))) >= 0)) break;
+  }
   for (const ts of tickets.values()) for (const t of ts) c.ok(ticketProblems(t).length === 0, 'beacon_ticket_valid');
-  // a call order in which at least one ticket completes the house before the last call (retry with fresh orders, then the full 90)
   let log, pos, done;
   for (let tries = 0; tries < 30; tries++) {
     const perm = shuffle(r, Array.from({ length: 90 }, (_, i) => i + 1));
