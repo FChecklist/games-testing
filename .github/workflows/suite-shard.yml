@@ -39,7 +39,7 @@ jobs:
           echo "monopoly $(git -C repos/monopoly rev-parse --short HEAD)" | tee -a out-versions.txt
           echo "corporate-tambola $(git -C repos/corporate-tambola rev-parse --short HEAD)" | tee -a out-versions.txt
       - name: tambola deps (pinned, npm registry only)
-        if: inputs.suite == 'tambola'
+        if: startsWith(inputs.suite, 'tambola')
         run: |
           mkdir deps && cd deps && npm init -y >/dev/null && npm i --no-audit --no-fund libphonenumber-js@1.13.15 @noble/curves@1.9.7 @noble/hashes@1.8.0 esbuild@0.25.0
       - name: run shard
