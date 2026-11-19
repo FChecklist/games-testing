@@ -4,7 +4,7 @@ name: suite-smoke-shard
 on:
   workflow_dispatch:
     inputs:
-      suite: { description: 'mp | mathbulk | monopoly', default: 'mp' }
+      suite: { description: 'mp | mathbulk | monopoly | tambola', default: 'mp' }
       seed: { default: 'G1' }
       shards: { description: 'parallel jobs (max 20)', default: '10' }
       per_shard: { description: 'cases per job', default: '20000' }
@@ -29,16 +29,25 @@ jobs:
         with: { repository: FChecklist/moneypenny, path: repos/moneypenny }
       - uses: actions/checkout@v4
         with: { repository: FChecklist/monopoly, path: repos/monopoly }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/corporate-tambola, path: repos/corporate-tambola }
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
       - name: record versions
         run: |
           echo "moneypenny $(git -C repos/moneypenny rev-parse --short HEAD)" | tee out-versions.txt
           echo "monopoly $(git -C repos/monopoly rev-parse --short HEAD)" | tee -a out-versions.txt
+          echo "corporate-tambola $(git -C repos/corporate-tambola rev-parse --short HEAD)" | tee -a out-versions.txt
+      - name: tambola deps (pinned, npm registry only)
+        if: inputs.suite == 'tambola'
+        run: |
+          mkdir deps && cd deps && npm init -y >/dev/null && npm i --no-audit --no-fund libphonenumber-js@1.13.15 @noble/curves@1.9.7 @noble/hashes@1.8.0 esbuild@0.25.0
       - name: run shard
         working-directory: harness/suite-smoke
         env:
           SUITE_ROOT: ${{ github.workspace }}/repos
+          TAMBOLA_NODE_MODULES: ${{ github.workspace }}/deps/node_modules
+          TS_ESBUILD_DIR: ${{ github.workspace }}/deps/node_modules
           SHARD: ${{ matrix.shard }}
           PER: ${{ inputs.per_shard }}
         run: |
