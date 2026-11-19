@@ -4,7 +4,7 @@ name: suite-smoke-shard
 on:
   workflow_dispatch:
     inputs:
-      suite: { description: 'mp | mathbulk | monopoly | tambola', default: 'mp' }
+      suite: { description: 'mp | mathbulk | monopoly | tambola | tambola2 | bingo | snakes | luckydraw | ttt | luck', default: 'mp' }
       seed: { default: 'G1' }
       shards: { description: 'parallel jobs (max 20)', default: '10' }
       per_shard: { description: 'cases per job', default: '20000' }
@@ -31,15 +31,25 @@ jobs:
         with: { repository: FChecklist/monopoly, path: repos/monopoly }
       - uses: actions/checkout@v4
         with: { repository: FChecklist/corporate-tambola, path: repos/corporate-tambola }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/corporate-bingo, path: repos/corporate-bingo }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/corporate-snakes-and-ladders, path: repos/corporate-snakes-and-ladders }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/corporate-tic-tac-toe, path: repos/corporate-tic-tac-toe }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/corporate-luck-by-chance, path: repos/corporate-luck-by-chance }
+      - uses: actions/checkout@v4
+        with: { repository: FChecklist/corporate-luckydraw, ref: feat/luckydraw-on-engine-2026-10-31, path: repos/corporate-luckydraw }
       - uses: actions/setup-node@v4
         with: { node-version: '22' }
       - name: record versions
         run: |
           echo "moneypenny $(git -C repos/moneypenny rev-parse --short HEAD)" | tee out-versions.txt
           echo "monopoly $(git -C repos/monopoly rev-parse --short HEAD)" | tee -a out-versions.txt
-          echo "corporate-tambola $(git -C repos/corporate-tambola rev-parse --short HEAD)" | tee -a out-versions.txt
+          for r in corporate-tambola corporate-bingo corporate-snakes-and-ladders corporate-tic-tac-toe corporate-luck-by-chance corporate-luckydraw; do echo "$r $(git -C repos/$r rev-parse --short HEAD)" | tee -a out-versions.txt; done
       - name: tambola deps (pinned, npm registry only)
-        if: startsWith(inputs.suite, 'tambola')
+        if: inputs.suite != 'mp' && inputs.suite != 'mathbulk' && inputs.suite != 'monopoly'
         run: |
           mkdir deps && cd deps && npm init -y >/dev/null && npm i --no-audit --no-fund libphonenumber-js@1.13.15 @noble/curves@1.9.7 @noble/hashes@1.8.0 esbuild@0.25.0
       - name: run shard
