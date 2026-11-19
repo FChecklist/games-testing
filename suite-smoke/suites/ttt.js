@@ -33,7 +33,7 @@ import { rng, cross } from '../lib/rng.js';
 import { Case } from '../lib/run.js';
 import { ROOT } from '../lib/roots.js';
 
-const REPO = process.env.TTT_REPO ? resolve(process.env.TTT_REPO) : resolve(ROOT, 'sc/corporate-tic-tac-toe');
+const REPO = process.env.TTT_REPO ? resolve(process.env.TTT_REPO) : (existsSync(resolve(ROOT, 'sc/corporate-tic-tac-toe')) ? resolve(ROOT, 'sc/corporate-tic-tac-toe') : resolve(ROOT, 'corporate-tic-tac-toe'));
 const TTT = existsSync(REPO) ? realpathSync(REPO) : REPO;
 const R = (p) => import(pathToFileURL(resolve(TTT, p)).href);
 const CL = await R('packages/ttt/src/classic.ts');
