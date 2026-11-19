@@ -8,6 +8,7 @@ on:
       seed: { default: 'G1' }
       shards: { description: 'parallel jobs (max 20)', default: '10' }
       per_shard: { description: 'cases per job', default: '20000' }
+      tambola_ref: { description: 'branch or commit of corporate-tambola (empty = default)', default: '' }
 permissions: { contents: read }
 jobs:
   plan:
@@ -30,7 +31,7 @@ jobs:
       - uses: actions/checkout@v4
         with: { repository: FChecklist/monopoly, path: repos/monopoly }
       - uses: actions/checkout@v4
-        with: { repository: FChecklist/corporate-tambola, path: repos/corporate-tambola }
+        with: { repository: FChecklist/corporate-tambola, ref: '${{ inputs.tambola_ref }}', path: repos/corporate-tambola }
       - uses: actions/checkout@v4
         with: { repository: FChecklist/corporate-bingo, path: repos/corporate-bingo }
       - uses: actions/checkout@v4
